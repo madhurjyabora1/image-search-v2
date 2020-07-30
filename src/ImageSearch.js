@@ -20,7 +20,7 @@ export default class ImageSearch extends Component {
     this.state = {
       photos: [],
       totalPhotos: 0,
-      perPage: 4,
+      perPage: 5,
       currentPage: 1,
       loadState: LOAD_STATE.LOADING,
       search: ""
@@ -58,7 +58,6 @@ export default class ImageSearch extends Component {
       axios
         .get(url, options)
         .then(response => {
-            console.log(typeof response.data);
             let photos;
             try {
               photos = response.data.results;
@@ -91,7 +90,6 @@ export default class ImageSearch extends Component {
       axios
         .get(url, options)
         .then(response => {
-            console.log(typeof response.data);
             let photos;
             try {
               photos = response.data;
