@@ -10,8 +10,6 @@ const LOAD_STATE = {
   LOADING: "LOADING"
 };
 
-const appId = "N1ZIgf1m1v9gZJhledpAOTXqS8HqL2DuiEyXZI9Uhsk";
-
 export default class ImageSearch extends Component {
   constructor() {
     super();
@@ -20,7 +18,7 @@ export default class ImageSearch extends Component {
     this.state = {
       photos: [],
       totalPhotos: 0,
-      perPage: 5,
+      perPage: 9,
       currentPage: 1,
       loadState: LOAD_STATE.LOADING,
       search: ""
@@ -35,29 +33,25 @@ export default class ImageSearch extends Component {
   }
 
   fetchPhotos(page = 1) {
+    const appId = "N1ZIgf1m1v9gZJhledpAOTXqS8HqL2DuiEyXZI9Uhsk";
     var self = this;
     const { search, perPage } = this.state;
-    const url1 = `https://api.unsplash.com/photos?page=${page}&client_id=${appId}`;
+    const url1 = `https://api.unsplash.com/photos?page=${page}&client_id=${appId}&per_page=${perPage}`;
     const url2 =
       `https://api.unsplash.com/search/photos?page=${page}&query=` +
       search +
       "&client_id=" +
-      appId;
+      appId+
+      "&per_page=" +
+      perPage;
     const url = search ? url2 : url1;
 
     if (search) {
-      const options = {
-        params: {
-          page: page,
-          per_page: perPage,
-          order_by: "popularity"
-        }
-      };
-
       this.setState({ loadState: LOAD_STATE.LOADING });
       axios
-        .get(url, options)
+        .get(url)
         .then(response => {
+          console.log(url)
             let photos;
             try {
               photos = response.data.results;
@@ -66,7 +60,7 @@ export default class ImageSearch extends Component {
             } catch {
               photos = [];
             }
-          this.setState({
+        this.setState({
             photos ,
             totalPhotos: parseInt(response.headers["x-total"]),
             currentPage: page,
@@ -77,19 +71,11 @@ export default class ImageSearch extends Component {
           this.setState({ loadState: LOAD_STATE.ERROR });
         });
     } else {
-      const options = {
-        params: {
-          client_id: appId,
-          page: page,
-          per_page: perPage,
-          order_by: "popularity"
-        }
-      };
-
       this.setState({ loadState: LOAD_STATE.LOADING });
       axios
-        .get(url, options)
+        .get(url)
         .then(response => {
+          console.log(url)
             let photos;
             try {
               photos = response.data;
