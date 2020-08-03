@@ -10,7 +10,7 @@ const customStyles = {
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
     overflow: "visible",
-    borderRadius: "15px"
+    borderRadius: "15px",
   },
 };
 
@@ -73,7 +73,8 @@ const ListItem = ({ photo }) => {
             />
             <div className='media__body'>
               <a href={photo.user.portfolio_url} target='_blank'>
-                <span style={{color: "white"}}>Image by {"  "}</span>{photo.user.name}
+                <span style={{ color: "white" }}>Image by {"  "}</span>
+                {photo.user.name}
               </a>
             </div>
           </div>
@@ -108,7 +109,7 @@ const ListItem = ({ photo }) => {
         </div>
         <img src={photo.urls.small} alt='' />
         <button onClick={() => setModalIsOpen(false)} className='btn-close'>
-          <i class='fa fa-close' style={{color: "white"}}/>
+          <i class='fa fa-close' style={{ color: "white" }} />
         </button>
         <div className='download-btn'>
           <button onClick={handleClick} className='loadMore'>

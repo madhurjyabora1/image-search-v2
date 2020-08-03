@@ -54,21 +54,21 @@ export default class Pagination extends Component {
 
   render() {
     return (
-      <div className="pagination">
-      <div className="pagination__right">
-        <button
-          type="button"
-          className={!this.hasNext() ? "hidden" : "loadMore"}
-          onClick={e => this.changePage(this.nextPage())}
-        >
-          Load More
-        </button>
+      <div className='pagination'>
+        <div className='pagination__right'>
+          <button
+            type='button'
+            className={!this.hasNext() ? "hidden" : "loadMore"}
+            onClick={(e) => this.changePage(this.nextPage())}
+          >
+            Load More
+          </button>
+        </div>
       </div>
-    </div>
     );
   }
 }
 
 Pagination.defaultProps = {
-  pageRange: 2
+  pageRange: 2,
 };

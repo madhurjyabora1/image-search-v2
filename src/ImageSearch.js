@@ -51,28 +51,28 @@ export default class ImageSearch extends Component {
         params: {
           page: page,
           per_page: perPage,
-          order_by: "popularity"
-        }
+          order_by: "popularity",
+        },
       };
 
       this.setState({ loadState: LOAD_STATE.LOADING });
       axios
         .get(url, options)
-        .then(response => {
+        .then((response) => {
           if (!isSameSearch) {
             this.setState({
               photos: [...response.data.results],
               totalPhotos: parseInt(response.headers["x-total"]),
               currentPage: page,
               loadState: LOAD_STATE.SUCCESS,
-              prevSearch: search
+              prevSearch: search,
             });
           } else {
             this.setState({
               photos: [...this.state.photos, ...response.data.results],
               totalPhotos: parseInt(response.headers["x-total"]),
               currentPage: page,
-              loadState: LOAD_STATE.SUCCESS
+              loadState: LOAD_STATE.SUCCESS,
             });
           }
         })
@@ -85,19 +85,19 @@ export default class ImageSearch extends Component {
           client_id: appId,
           page: page,
           per_page: perPage,
-          order_by: "popularity"
-        }
+          order_by: "popularity",
+        },
       };
 
       this.setState({ loadState: LOAD_STATE.LOADING });
       axios
         .get(url, options)
-        .then(response => {
+        .then((response) => {
           self.setState({
             photos: [...this.state.photos, ...response.data],
             totalPhotos: parseInt(response.headers["x-total"]),
             currentPage: page,
-            loadState: LOAD_STATE.SUCCESS
+            loadState: LOAD_STATE.SUCCESS,
           });
         })
         .catch(() => {
@@ -108,13 +108,11 @@ export default class ImageSearch extends Component {
   render() {
     return (
       <div className='app'>
-        
         <form
           className='inputImage'
           onSubmit={(e) => {
             e.preventDefault();
             this.fetchPhotos(1);
-            
           }}
           style={{ margin: "auto", maxWidth: "300px" }}
         >
@@ -125,9 +123,7 @@ export default class ImageSearch extends Component {
             name='search'
             required
           />
-          <button
-            type='submit'
-          >
+          <button type='submit'>
             <i class='fa fa-search' />
           </button>
         </form>
