@@ -7,7 +7,7 @@ import axios from "axios";
 const LOAD_STATE = {
   SUCCESS: "SUCCESS",
   ERROR: "ERROR",
-  LOADING: "LOADING"
+  LOADING: "LOADING",
 };
 
 export default class ImageSearch extends Component {
@@ -21,7 +21,8 @@ export default class ImageSearch extends Component {
       perPage: 9,
       currentPage: 1,
       loadState: LOAD_STATE.LOADING,
-      search: ""
+      search: "",
+      prevSearch: "",
     };
   }
   handleChange(e) {
@@ -35,57 +36,65 @@ export default class ImageSearch extends Component {
   fetchPhotos(page = 1) {
     const appId = "N1ZIgf1m1v9gZJhledpAOTXqS8HqL2DuiEyXZI9Uhsk";
     var self = this;
-    const { search, perPage } = this.state;
-    const url1 = `https://api.unsplash.com/photos?page=${page}&client_id=${appId}&per_page=${perPage}`;
+    const { search, perPage, prevSearch } = this.state;
+    const url1 = `https://api.unsplash.com/photos?page=${page}&client_id=${appId}`;
     const url2 =
       `https://api.unsplash.com/search/photos?page=${page}&query=` +
       search +
       "&client_id=" +
-      appId+
-      "&per_page=" +
-      perPage;
+      appId;
     const url = search ? url2 : url1;
 
+    const isSameSearch = prevSearch === search;
     if (search) {
+      const options = {
+        params: {
+          page: page,
+          per_page: perPage,
+          order_by: "popularity"
+        }
+      };
+
       this.setState({ loadState: LOAD_STATE.LOADING });
       axios
-        .get(url)
+        .get(url, options)
         .then(response => {
-          console.log(url)
-            let photos;
-            try {
-              photos = response.data.results;
-              if (Object.getOwnPropertyNames(photos).length === 0) {
-                photos = [];}
-            } catch {
-              photos = [];
-            }
-        this.setState({
-            photos ,
-            totalPhotos: parseInt(response.headers["x-total"]),
-            currentPage: page,
-            loadState: LOAD_STATE.SUCCESS
-          });
+          if (!isSameSearch) {
+            this.setState({
+              photos: [...response.data.results],
+              totalPhotos: parseInt(response.headers["x-total"]),
+              currentPage: page,
+              loadState: LOAD_STATE.SUCCESS,
+              prevSearch: search
+            });
+          } else {
+            this.setState({
+              photos: [...this.state.photos, ...response.data.results],
+              totalPhotos: parseInt(response.headers["x-total"]),
+              currentPage: page,
+              loadState: LOAD_STATE.SUCCESS
+            });
+          }
         })
         .catch(() => {
           this.setState({ loadState: LOAD_STATE.ERROR });
         });
     } else {
+      const options = {
+        params: {
+          client_id: appId,
+          page: page,
+          per_page: perPage,
+          order_by: "popularity"
+        }
+      };
+
       this.setState({ loadState: LOAD_STATE.LOADING });
       axios
-        .get(url)
+        .get(url, options)
         .then(response => {
-          console.log(url)
-            let photos;
-            try {
-              photos = response.data;
-              if (Object.getOwnPropertyNames(photos).length === 0) {
-                photos = [];}
-            } catch {
-              photos = [];
-            }
           self.setState({
-            photos,
+            photos: [...this.state.photos, ...response.data],
             totalPhotos: parseInt(response.headers["x-total"]),
             currentPage: page,
             loadState: LOAD_STATE.SUCCESS
@@ -96,33 +105,35 @@ export default class ImageSearch extends Component {
         });
     }
   }
-
   render() {
     return (
-      <div className="app">
-        <input
-          onChange={this.handleChange}
-          type="text"
-          name="search"
-          placeholder="Enter query"
-        />
-        <button
-          type="submit"
-          onClick={() => this.fetchPhotos(1)}
-          className="button"
+      <div className='app'>
+        
+        <form
+          className='inputImage'
+          onSubmit={(e) => {
+            e.preventDefault();
+            this.fetchPhotos(1);
+            
+          }}
+          style={{ margin: "auto", maxWidth: "300px" }}
         >
-          Submit
-        </button>
-        <Pagination
-          current={this.state.currentPage}
-          total={this.state.totalPhotos}
-          perPage={this.state.perPage}
-          onPageChanged={this.fetchPhotos.bind(this)}
-        />
-        {this.state.loadState === LOAD_STATE.LOADING ? (
-          <div className="loader" />
-        ) : (
-          <List data={this.state.photos} />
+          <input
+            type='text'
+            placeholder='Search..'
+            onChange={this.handleChange}
+            name='search'
+            required
+          />
+          <button
+            type='submit'
+          >
+            <i class='fa fa-search' />
+          </button>
+        </form>
+        <List data={this.state.photos} />
+        {this.state.loadState === LOAD_STATE.LOADING && (
+          <div className='loader' />
         )}
         <Pagination
           current={this.state.currentPage}

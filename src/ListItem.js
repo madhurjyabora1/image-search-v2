@@ -8,16 +8,15 @@ const customStyles = {
     right: "auto",
     bottom: "auto",
     marginRight: "-50%",
-    transform: "translate(-50%, -50%)"
-  }
+    transform: "translate(-50%, -50%)",
+    overflow: "visible",
+    borderRadius: "15px"
+  },
 };
 
-const uuid = () =>
-  Math.random()
-    .toString(36)
-    .substring(7);
-const toBlob = src =>
-  new Promise(res => {
+const uuid = () => Math.random().toString(36).substring(7);
+const toBlob = (src) =>
+  new Promise((res) => {
     const img = document.createElement("img");
     const c = document.createElement("canvas");
     const ctx = c.getContext("2d");
@@ -25,7 +24,7 @@ const toBlob = src =>
       c.width = target.naturalWidth;
       c.height = target.naturalHeight;
       ctx.drawImage(target, 0, 0);
-      c.toBlob(b => res(b), "image/jpeg", 0.75);
+      c.toBlob((b) => res(b), "image/jpeg", 0.75);
     };
     img.crossOrigin = "";
     img.src = src;
@@ -58,24 +57,25 @@ const ListItem = ({ photo }) => {
 
   return (
     <>
-      <div key={photo.id} className="grid__item card">
-        <div className="card__body">
+      <div key={photo.id} className='grid__item card'>
+        <div className='card__body'>
           <img
             src={photo.urls.small}
-            alt=""
+            alt=''
             onClick={() => setModalIsOpen(true)}
           />
-        </div>
-        <div className="card__footer media">
-          <img
-            src={photo.user.profile_image.small}
-            alt=""
-            className="media__obj"
-          />
-          <div className="media__body">
-            <a href={photo.user.portfolio_url} target="_blank">
-              {photo.user.name}
-            </a>
+          <div className='card__footer media'>
+            <img
+              src={photo.user.profile_image.small}
+              alt=''
+              width='30px'
+              className='media__obj'
+            />
+            <div className='media__body'>
+              <a href={photo.user.portfolio_url} target='_blank'>
+                <span style={{color: "white"}}>Image by {"  "}</span>{photo.user.name}
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -84,13 +84,34 @@ const ListItem = ({ photo }) => {
         onRequestClose={() => setModalIsOpen(false)}
         style={customStyles}
       >
-        <img src={photo.urls.small} alt="" />
-        <div>
-          <button onClick={() => setModalIsOpen(false)} className="button1">
-            Close
-          </button>
-
-          <button onClick={handleClick} className="button1">
+        <div className='imageHolder'>
+          <div className='user-modal-body'>
+            <img
+              src={photo.user.profile_image.small}
+              alt=''
+              width='90px'
+              className='user-modal'
+            />
+            <a
+              href={photo.user.portfolio_url}
+              target='_blank'
+              className='just-name'
+            >
+              {photo.user.name}
+            </a>
+            {photo.user.instagram_username ? (
+              <p className='insta-name'>@{photo.user.instagram_username}</p>
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+        <img src={photo.urls.small} alt='' />
+        <button onClick={() => setModalIsOpen(false)} className='btn-close'>
+          <i class='fa fa-close' style={{color: "white"}}/>
+        </button>
+        <div className='download-btn'>
+          <button onClick={handleClick} className='loadMore'>
             Download
           </button>
         </div>

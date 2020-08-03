@@ -55,56 +55,16 @@ export default class Pagination extends Component {
   render() {
     return (
       <div className="pagination">
-        <div className="pagination__left">
-          <a
-            href="#"
-            className={!this.hasPrev() ? "hidden" : ""}
-            onClick={e => this.changePage(this.prevPage())}
-          >
-            Prev
-          </a>
-        </div>
-
-        <div className="pagination__mid">
-          <ul>
-            <li className={!this.hasFirst() ? "hidden" : ""}>
-              <a href="#" onClick={e => this.changePage(1)}>
-                1
-              </a>
-            </li>
-            <li className={!this.hasFirst() ? "hidden" : ""}>...</li>
-            {this.pages().map((page, index) => {
-              return (
-                <li key={index}>
-                  <a
-                    href="#"
-                    onClick={e => this.changePage(page)}
-                    className={this.props.current == page ? "current" : ""}
-                  >
-                    {page}
-                  </a>
-                </li>
-              );
-            })}
-            <li className={!this.hasLast() ? "hidden" : ""}>...</li>
-            <li className={!this.hasLast() ? "hidden" : ""}>
-              <a href="#" onClick={e => this.changePage(this.totalPages())}>
-                {this.totalPages()}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="pagination__right">
-          <a
-            href="#"
-            className={!this.hasNext() ? "hidden" : ""}
-            onClick={e => this.changePage(this.nextPage())}
-          >
-            Next
-          </a>
-        </div>
+      <div className="pagination__right">
+        <button
+          type="button"
+          className={!this.hasNext() ? "hidden" : "loadMore"}
+          onClick={e => this.changePage(this.nextPage())}
+        >
+          Load More
+        </button>
       </div>
+    </div>
     );
   }
 }
